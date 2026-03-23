@@ -13,11 +13,23 @@ params = {
     "pageSize": 20,
     "sortBy": "publishedAt"
 }
-response = requests.get(url, headers=headers, params=params)
 
-if response.status_code == 200:
-    data = response.json()
-    for i, article in enumerate(data.get("articles", []), start=1):
-        print(f"{i}. {article.get('title')} {article.get('source', {}).get('name')} \n")
-else:
-    print(f"Error: {response.status_code}")
+def fetch_news():
+    response = requests.get(url, headers=headers, params=params)
+    articles = []
+
+    if response.status_code == 200:
+        data = response.json()
+        for article in data.get("articles", []):
+            articles.append({
+                "title": article.get('title'),
+                "source": article.get('source', {}).get('name')
+            })
+
+        # for i, article in enumerate(data.get("articles", []), start=1):
+           # print(f"{i}. {article.get('title')} {article.get('source', {}).get('name')} \n")
+    
+    else:
+        print(f"Error: {response.status_code}")
+
+    return articles
